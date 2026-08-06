@@ -38,7 +38,7 @@ stream.to(
 
 ### KTable
 
-Also known as Update Stream, KTable has a different semantic. Here, multiple record with the same Key are considered an update for the same event. On KTable, the events aren't entirely stored in-memory, the last state of an event is stored in-disk using **RockDB** instead.
+Also known as Update Stream, KTable has a different semantic. Here, multiple record with the same Key are considered an update for the same event. On KTable, the events aren't entirely stored in-memory, the last state of an event is stored in-disk using **RocksDB** instead.
 
 ![Update Stream](images/update-stream.png)
 
@@ -90,10 +90,10 @@ table.to(
 ---
 ## Basic Stream Operations
 
-- `mapValue`: Transforms only the value from Key/Value pair. It's the recommended for ordinary flow.
-- `map`: Transforms both Key and Value from the record.
+- `mapValue`: Transform only the value from Key/Value pair. It's the recommended for ordinary flow.
+- `map`: Transform both Key and Value from the record.
 - `filter`: Apply a conditional filter.
-- `aggregate`:
+- `aggregate`: 
 - `toStream`: Transform from KTable to KStream.
 - `to`: Forward the event to some topic.
 
@@ -222,4 +222,3 @@ KTable<String, String> leftOuterTable = leftTable.leftJoin(
 Made with ☕ by **Filipe Martins**
 
 </div>
----
