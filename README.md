@@ -100,6 +100,8 @@ table.to(
 ---
 ## Join
 
+![Join](images/join.png)
+
 A join is a Stream operation with immutable Keys that merges two streams/tables, using related keys, into a single output. There are three types of Join: Stream-Stream, Stream-Table and Table-Table. Each type of Join can support some of these operations:
 
 - **Inner Join**: Only if both sides are available.
