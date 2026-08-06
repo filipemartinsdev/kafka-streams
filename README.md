@@ -8,6 +8,27 @@
 
 </div>
 
+## Index
+
+1. [Stream Types](#stream-types)
+
+    1.1. [KStream](#kstream)
+
+    1.2. [KTable](#ktable)
+
+    1.3. [GlobalKTable](#globalktable)
+
+2. [Basic Stream operations](#basic-stream-operations)
+
+3. [Join](#join)
+
+    3.1. [Stream-Stream Join](#stream-stream-join)
+
+    3.2. [Stream-Table Join](#stream-table-join)
+
+    3.3. [Table-Table Join](#table-table-join)
+
+
 ## Stream Types
 
 There are some stream types to use with **Kafka Streams**, each with its use cases. All streams are based on Key-Value data.
