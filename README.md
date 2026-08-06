@@ -15,6 +15,8 @@
     1.2. [KTable](#ktable) <br>
     1.3. [GlobalKTable](#globalktable) <br>
 2. [Basic Stream operations](#basic-stream-operations) <br>
+    2.1. [Stateless](#stateless) <br>
+    2.1. [Stateful](#stateful) <br>
 3. [Join](#join) <br>
     3.1. [Stream-Stream Join](#stream-stream-join) <br>
     3.2. [Stream-Table Join](#stream-table-join) <br>
@@ -102,12 +104,22 @@ table.to(
 ---
 ## Basic Stream Operations
 
+### Stateless
+
 - `mapValue`: Transforms only the value from Key/Value pair. It's recommended for ordinary flows.
 - `map`: Transforms both Key and Value from the record.
 - `filter`: Applies a conditional filter.
-- `aggregate`: 
 - `toStream`: Transforms from KTable to KStream.
 - `to`: Forwards the event to some topic.
+
+### Stateful
+
+> Building...
+
+- `count`:
+- `reduce`:
+- `aggregate`: 
+
 
 ---
 ## Join
