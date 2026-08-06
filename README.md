@@ -103,8 +103,32 @@ table.to(
 A join is a Stream operation with immutable Keys that merges two streams/tables, using related keys, into a single output. There are three types of Join: Stream-Stream, Stream-Table and Table-Table. Each type of Join can support some of these operations:
 
 - **Inner Join**: Only if both sides are available.
+
+| Left has value | Right has value | Joined |
+|----------------|-----------------|--------|
+| False          | False           | False  |
+| False          | True            | False  |
+| True           | False           | False  |
+| True           | True            | True   |
+
+
 - **Outer Join**: Both side always produces a new merge, joining the nullable side.
+
+| Left has value | Right has value | Joined |
+|----------------|-----------------|--------|
+| False          | False           | False  |
+| False          | True            | True   |
+| True           | False           | True   |
+| True           | True            | True   |
+
 - **Left Outer Join**: The left side always produces a new merge, joining the nullable right side.
+
+| Left has value | Right has value | Joined |
+|----------------|-----------------|--------|
+| False          | False           | False  |
+| False          | True            | False  |
+| True           | False           | True   |
+| True           | True            | True   |
 
 Let's go ahead and explore each of them.
 
