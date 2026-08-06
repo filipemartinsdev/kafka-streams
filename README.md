@@ -10,24 +10,15 @@
 
 ## Index
 
-1. [Stream Types](#stream-types)
-
-    1.1. [KStream](#kstream)
-
-    1.2. [KTable](#ktable)
-
-    1.3. [GlobalKTable](#globalktable)
-
-2. [Basic Stream operations](#basic-stream-operations)
-
-3. [Join](#join)
-
-    3.1. [Stream-Stream Join](#stream-stream-join)
-
-    3.2. [Stream-Table Join](#stream-table-join)
-
-    3.3. [Table-Table Join](#table-table-join)
-
+1. [Stream Types](#stream-types) <br>
+    1.1. [KStream](#kstream) <br>
+    1.2. [KTable](#ktable) <br>
+    1.3. [GlobalKTable](#globalktable) <br>
+2. [Basic Stream operations](#basic-stream-operations) <br>
+3. [Join](#join) <br>
+    3.1. [Stream-Stream Join](#stream-stream-join) <br>
+    3.2. [Stream-Table Join](#stream-table-join) <br>
+    3.3. [Table-Table Join](#table-table-join) <br>
 
 ## Stream Types
 
