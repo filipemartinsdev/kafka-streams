@@ -14,7 +14,7 @@ There are some stream types to use with **Kafka Streams**, each with its use cas
 
 ### KStream
 
-The basic one, also known as Event Stream, represents unrelated events with the same key. Here, all events are stored on memory.
+The basic one, also known as Event Stream, represents unrelated events that might have the same key. Here, all events are stored on memory.
 
 ![Event Stream](images/event-stream.png)
 
