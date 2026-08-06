@@ -16,7 +16,7 @@
     1.3. [GlobalKTable](#globalktable) <br>
 2. [Basic Stream operations](#basic-stream-operations) <br>
     2.1. [Stateless](#stateless) <br>
-    2.1. [Stateful](#stateful) <br>
+    2.2. [Stateful](#stateful) <br>
 3. [Join](#join) <br>
     3.1. [Stream-Stream Join](#stream-stream-join) <br>
     3.2. [Stream-Table Join](#stream-table-join) <br>
