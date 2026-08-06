@@ -2,13 +2,12 @@
 
 <div align="center">
 
-<img href="images/banner.png">
+<img src="images/banner.png">
 
 <h1>Kafka Streams</h1>
 
 </div>
 
----
 ## Stream Types
 
 There's some stream types to use with **Kafka Streams**, each with its approach. All streams are based on Key-Value data.
