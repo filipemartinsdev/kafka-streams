@@ -192,19 +192,19 @@ stream.groupBy(
 
 ### Time Window
 
-![time-window.png](images/time-window.png)
+![time-window.png](images/windowing/time.png)
 
 ### Tumbling Window
 
-![tumbling-window.png](images/tumbling-window.png)
+![tumbling-window.png](images/windowing/tumbling.png)
 
 ### Session Window
 
-![session-window.png](images/session-window.png)
+![session-window.png](images/windowing/session.png)
 
 ### Sliding Window
 
-![sliding-window.png](images/sliding-window.png)
+![sliding-window.png](images/windowing/sliding.png)
 
 
 
