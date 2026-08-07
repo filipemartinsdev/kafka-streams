@@ -17,11 +17,16 @@
 3. [Basic Stream operations](#basic-stream-operations) <br>
     3.1. [Stateless](#stateless) <br>
     3.2. [Stateful](#stateful) <br>
-4. [Join](#join) <br>
-    4.1. [Stream-Stream Join](#stream-stream-join) <br>
-    4.2. [Stream-Table Join](#stream-table-join) <br>
-    4.3. [Table-Table Join](#table-table-join) <br>
-5. [Spring/Quarkus integration](#springquarkus-integration) <br>
+4. [Windowing](#windowing) <br>
+    4.1. [Time Window](#time-window) <br>
+    4.2. [Tumbling Window](#tumbling-window) <br>
+    4.3. [Session Window](#session-window) <br>
+    4.4. [Sliding Window](#sliding-window) <br>
+5. [Join](#join) <br>
+    5.1. [Stream-Stream Join](#stream-stream-join) <br>
+    5.2. [Stream-Table Join](#stream-table-join) <br>
+    5.3. [Table-Table Join](#table-table-join) <br>
+6. [Spring/Quarkus integration](#springquarkus-integration) <br>
 
 ## Serialization
 
