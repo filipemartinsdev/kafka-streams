@@ -9,18 +9,37 @@
 </div>
 
 ## Index
+1. [Serialization](#serialization) <br>
+2. [Stream Types](#stream-types) <br>
+    2.1. [KStream](#kstream) <br>
+    2.2. [KTable](#ktable) <br>
+    2.3. [GlobalKTable](#globalktable) <br>
+3. [Basic Stream operations](#basic-stream-operations) <br>
+    3.1. [Stateless](#stateless) <br>
+    3.2. [Stateful](#stateful) <br>
+4. [Join](#join) <br>
+    4.1. [Stream-Stream Join](#stream-stream-join) <br>
+    4.2. [Stream-Table Join](#stream-table-join) <br>
+    4.3. [Table-Table Join](#table-table-join) <br>
 
-1. [Stream Types](#stream-types) <br>
-    1.1. [KStream](#kstream) <br>
-    1.2. [KTable](#ktable) <br>
-    1.3. [GlobalKTable](#globalktable) <br>
-2. [Basic Stream operations](#basic-stream-operations) <br>
-    2.1. [Stateless](#stateless) <br>
-    2.2. [Stateful](#stateful) <br>
-3. [Join](#join) <br>
-    3.1. [Stream-Stream Join](#stream-stream-join) <br>
-    3.2. [Stream-Table Join](#stream-table-join) <br>
-    3.3. [Table-Table Join](#table-table-join) <br>
+## Serialization
+
+The entire Kafka Streams serialization are based on Serde concept. Serde means Serializer/Desserializer, thus, they are wrapper classes to abstract both Serializer and Deserializer classes from the same type to bytes.
+
+We can use differents built-in Serdes for basic types or create a custom Serde for specific classes. All built-in Serdes can be retrieved from `Serdes` class, e.g. `Serdes.String()`.
+
+Examples:
+
+```java
+// Basic Serdes:
+Serdes.String();
+Serdes.Integer();
+Serdes.Boolean();
+Serdes.UUID();
+
+// Custom Serde, if using Jackson:
+Serde<YourClass> customSerde = new ObjectMapperSerde<>(YourClass.class, new ObjectMapper());
+```
 
 ## Stream Types
 
@@ -100,26 +119,66 @@ table.to(
 );
 ```
 
-
 ---
 ## Basic Stream Operations
+
+The stream operations are separated into two categories, Stateless and Stateful. The Stateless includes basic operations that doesn't need past record state or any stored data. On the other hand, Stateful operations need the past event state.
 
 ### Stateless
 
 - `mapValue`: Transforms only the value from Key/Value pair. It's recommended for ordinary flows.
 - `map`: Transforms both Key and Value from the record.
 - `filter`: Applies a conditional filter.
+- `windowed`: Applies sliding window to stream.
 - `toStream`: Transforms from KTable to KStream.
 - `to`: Forwards the event to some topic.
 
 ### Stateful
 
-> Building...
+- `count`: Calculate how many messages have already been forwarded.
+- `reduce`: Apply a reduce function to the entire stream.
+- `aggregate`: It's like reduce, but can handle multiple types.
 
-- `count`:
-- `reduce`:
-- `aggregate`: 
+The stateful operations just make sense if the events are grouped, for instance, by Key. Thus, we need to use `groubByKey` or a custom `groupBy` method to group the events before applying any stateful operations.
 
+Example:
+
+```java
+var builder = new StreamsBuilder();
+
+KStream textStream = builder.stream(
+        "text-topic",
+        Consumed.with(Serdes.String(), Serdes.String())
+);
+
+stream.mapValue((value) -> value.toUpperCase()) // Transform text to uppercase
+    .peek((key, value) -> System.out.println(value))
+
+    .filter((key, value) -> value.length() > 10) // Get only text with 10+ characters
+
+    .groupByKey()
+    
+    .aggregate(
+            () -> 0L, // Default accumulator value
+            (key, value, accumulator) -> accumulator + value.length(),
+            Materialized.with(Serdes.String(), Serdes.Integer())
+    )
+    
+    .toStream()
+    
+    .to("character-count-topic", Produced.with(Serdes.String(), Serdes.Integer()));
+
+
+```
+
+If your events have not been sent with a Key, you can set a custom `groupBy` like this:
+
+```java
+stream.groupBy(
+        (key, value) -> value.youCustomId(),
+        Grouped.with(Serdes.String(), Serdes.String())
+);
+```
 
 ---
 ## Join
