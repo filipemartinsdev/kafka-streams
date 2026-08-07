@@ -20,7 +20,8 @@
 4. [Join](#join) <br>
     4.1. [Stream-Stream Join](#stream-stream-join) <br>
     4.2. [Stream-Table Join](#stream-table-join) <br>
-    4.3. [Table-Table Join](#table-table-join) <br>
+    4.3. [Table-Table Join](#table-table-join) <br
+5. [Spring/Quarkus integration](#springquarkus-integration) <br>
 
 ## Serialization
 
@@ -324,6 +325,15 @@ KTable<String, String> leftOuterTable = leftTable.leftJoin(
 	joiner
 );
 ```
+
+---
+
+## Spring/Quarkus integration
+
+You can see the same example project implementing Kafka Streams using Spring Boot or Quarkus:
+
+- [Spring Boot project](https://github.com/filipemartinsdev/spring-kafka-sandbox)
+- [Quarkus project](https://github.com/filipemartinsdev/quarkus-kafka-sandbox)
 
 ---
 <div align="center">
