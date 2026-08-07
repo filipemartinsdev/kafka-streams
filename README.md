@@ -132,7 +132,7 @@ The stream operations are separated into two categories, Stateless and Stateful.
 
 ### Stateless
 
-- `mapValue`: Transforms only the value from Key/Value pair. It's recommended for ordinary flows.
+- `mapValues`: Transforms only the value from Key/Value pair. It's recommended for ordinary flows.
 - `map`: Transforms both Key and Value from the record.
 - `filter`: Applies a conditional filter.
 - `toStream`: Converts current data to KStream.
@@ -156,7 +156,7 @@ KStream textStream = builder.stream(
         Consumed.with(Serdes.String(), Serdes.String())
 );
 
-stream.mapValue((value) -> value.toUpperCase()) // Transform text to uppercase
+stream.mapValues((key, value) -> value.toUpperCase()) // Transform text to uppercase
     .peek((key, value) -> System.out.println(value))
 
     .filter((key, value) -> value.length() > 10) // Get only text with 10+ characters
@@ -188,23 +188,180 @@ stream.groupBy(
 ---
 ## Windowing
 
-> Section under construction...
+Not everytime we want to read all the stream historic on stateful operations. For that cases, we can use windowing to read only a time window from the stream. There are four type of windows with different approaches, being full time-based or even based on data flow.
 
-### Time Window
+All windows have `size` (fixed or not) and a `grace period`. Grace period is the extra time to some late event enter its window by timestamp. For example, an event has been created at 12pm, but for some reason, like network connection, just arrived at 12:05pm. Without a configured grace period that event would be lost.
 
-![time-window.png](images/windowing/time.png)
+Every event is going to be forwarded downstream everytime the window is updated. If you want a unique output by window, consider using `supress()` after the aggregation, for example:
+
+```java
+yourStream.aggregate(...)
+    .supress(Suppressed.untilWindowCloses(Suppressed.BufferConfig.unbounded()))
+```
+
+### Hopping Window
+
+![time-window.png](images/windowing/hopping.png)
+
+
+Hopping Window is a semantic kind of `TimeWindows`, representing a window at which advance value is less than size, then, the same event can be on multiple windows.
+
+With `TimeWindows` class we can set three duration values: `size`, `grace` and `advance`. The advance value represents the interval at which a new window is created.
+
+Example:
+
+```java
+var builder = new StreamsBuilder();
+
+KStream<String, Integer> stream = builder.stream(
+        "numbers-topic",
+        Consumed.with(Serdes.String(), Serdes.Integer())
+);
+
+var windowSize = Duration.ofMinutes(10);
+var graceTime = Duration.ofMinutes(1);
+var advanceTime = Duration.ofMinutes(5);
+
+var timeWindows = TimeWindows
+        .ofSizeAndGrace(windowSize, graceTime)
+        .advanceBy(advanceTime);
+
+stream.groupByKey()
+    .windowed(timeWindows);
+
+    .aggregate(
+            () -> 0L,
+            (key, value, accumulator) -> accumulator + value,
+            Materialized.with(Serdes.String(), Serdes.Integer())
+    )
+
+    .supress(untilWindowCloses(unbounded()))
+        
+    .toStream()
+
+    .map((windowedKey, value) -> {
+            return new KeyValue<>(windowedKey.key(), value);
+    })
+
+    .to("numbers-sum-topic", Produced.with(Serdes.String(), Serdes.Integer()))
+```
 
 ### Tumbling Window
 
 ![tumbling-window.png](images/windowing/tumbling.png)
 
+Tumbling window is a subtype  of Hopping Window, but, with the `size` exactly equals to `advance` time. The records won't repeat on multiple windows, then, it's useful when you need unique events. 
+
+Example:
+
+```java
+var builder = new StreamsBuilder();
+
+KStream<String, Integer> stream = builder.stream(
+        "numbers-topic",
+        Consumed.with(Serdes.String(), Serdes.Integer())
+);
+
+var windowSize = Duration.ofMinutes(10);
+var graceTime = Duration.ofMinutes(1);
+
+var timeWindows = TimeWindows.ofSizeAndGrace(windowSize, graceTime).advanceBy();
+
+stream.groupByKey()
+    .windowed(timeWindows)
+
+    .count() // Counts events from the last 10 minutes
+
+    .supress(untilWindowCloses(unbounded()))
+
+    .toStream()
+
+    .map((windowedKey, value) -> {
+            return new KeyValue<>(windowedKey.key(), value);
+    })
+
+    .to("numbers-sum-topic", Produced.with(Serdes.String(), Serdes.Integer()))
+```
+
+
 ### Session Window
 
 ![session-window.png](images/windowing/session.png)
 
+Example:
+
+```java
+var builder = new StreamsBuilder();
+
+KStream<String, Integer> stream = builder.stream(
+        "numbers-topic",
+        Consumed.with(Serdes.String(), Serdes.Integer())
+);
+
+var windowSize = Duration.ofMinutes(10);
+var graceTime = Duration.ofMinutes(1);
+var advanceTime = Duration.ofMinutes(10);
+
+var sessionWindow = SessionWindow
+        .ofInactivityGapAndGrace(windowSize, graceTime)
+        .advanceBy(advanceTime);
+
+stream.groupByKey()
+    .windowed(sessionWindow);
+
+    .aggregate(
+            () -> 0L,
+            (key, value, accumulator) -> accumulator + value,
+            Materialized.with(Serdes.String(), Serdes.Integer())
+    )
+
+    .supress(untilWindowCloses(unbounded()))
+
+    .toStream()
+
+    .map((windowedKey, value) -> {
+            return new KeyValue<>(windowedKey.key(), value);
+    })
+
+    .to("numbers-sum-topic", Produced.with(Serdes.String(), Serdes.Integer()))
+```
+
 ### Sliding Window
 
 ![sliding-window.png](images/windowing/sliding.png)
+
+Example:
+
+```java
+var builder = new StreamsBuilder();
+
+KStream<String, Integer> stream = builder.stream(
+        "numbers-topic",
+        Consumed.with(Serdes.String(), Serdes.Integer())
+);
+
+var timeDifference = Duration.ofMinutes(10);
+var graceTime = Duration.ofMinutes(1);
+
+var slidingWindow = TimeWindows.ofTimeDifferenceAndGrace(timeDifference, graceTime).advanceBy();
+
+stream.groupByKey()
+    .windowed(timeWindows);
+
+    .aggregate(
+            () -> 0L,
+            (key, value, accumulator) -> accumulator + value,
+            Materialized.with(Serdes.String(), Serdes.Integer())
+    )
+
+    .toStream()
+
+    .map((windowedKey, value) -> {
+            return new KeyValue<>(windowedKey.key(), value);
+    })
+
+    .to("numbers-sum-topic", Produced.with(Serdes.String(), Serdes.Integer()))
+```
 
 
 
