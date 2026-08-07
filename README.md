@@ -250,7 +250,7 @@ stream.groupByKey()
 
 ![tumbling-window.png](images/windowing/tumbling.png)
 
-Tumbling window is a subtype  of Hopping Window, but, with the `size` exactly equals to `advance` time. The records won't repeat on multiple windows, then, it's useful when you need unique events. 
+Tumbling window is a subtype of Hopping Window, but, with the `size` exactly equals to `advance` time. The records won't repeat on multiple windows, then, it's useful when you need unique events. 
 
 Example:
 
@@ -288,6 +288,8 @@ stream.groupByKey()
 
 ![session-window.png](images/windowing/session.png)
 
+Session window is a type of window that groups events by nearby timestamps, without size limit. Here, the windows are sliced when the `inactivity gap` duration is exceeded, meaning that events stop arriving within the configured gap. It's very useful to analyze user sessions.
+
 Example:
 
 ```java
@@ -298,13 +300,11 @@ KStream<String, Integer> stream = builder.stream(
         Consumed.with(Serdes.String(), Serdes.Integer())
 );
 
-var windowSize = Duration.ofMinutes(10);
+var inactivityGap = Duration.ofMinutes(10);
 var graceTime = Duration.ofMinutes(1);
-var advanceTime = Duration.ofMinutes(10);
 
 var sessionWindow = SessionWindow
-        .ofInactivityGapAndGrace(windowSize, graceTime)
-        .advanceBy(advanceTime);
+        .ofInactivityGapAndGrace(inactivityGap, graceTime);
 
 stream.groupByKey()
     .windowed(sessionWindow);
@@ -330,6 +330,8 @@ stream.groupByKey()
 
 ![sliding-window.png](images/windowing/sliding.png)
 
+Sliding windows have a fixed size and an undefined advance time, thus, the advance is driven by the events themselves. For each event, a new window is created and downstream operations are applied.
+
 Example:
 
 ```java
@@ -347,23 +349,13 @@ var slidingWindow = TimeWindows.ofTimeDifferenceAndGrace(timeDifference, graceTi
 
 stream.groupByKey()
     .windowed(timeWindows);
-
-    .aggregate(
-            () -> 0L,
-            (key, value, accumulator) -> accumulator + value,
-            Materialized.with(Serdes.String(), Serdes.Integer())
-    )
+    
+    .reduce((value1, value2) -> value1 + value2) // Sum values from last 10 minutes
 
     .toStream()
-
-    .map((windowedKey, value) -> {
-            return new KeyValue<>(windowedKey.key(), value);
-    })
-
-    .to("numbers-sum-topic", Produced.with(Serdes.String(), Serdes.Integer()))
+        
+    .peek((windowedKey, value) -> System.out.println("Sum: " + value));
 ```
-
-
 
 ---
 ## Join
