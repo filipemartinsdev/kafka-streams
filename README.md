@@ -20,7 +20,7 @@
 4. [Join](#join) <br>
     4.1. [Stream-Stream Join](#stream-stream-join) <br>
     4.2. [Stream-Table Join](#stream-table-join) <br>
-    4.3. [Table-Table Join](#table-table-join) <br
+    4.3. [Table-Table Join](#table-table-join) <br>
 5. [Spring/Quarkus integration](#springquarkus-integration) <br>
 
 ## Serialization
