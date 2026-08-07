@@ -135,7 +135,6 @@ The stream operations are separated into two categories, Stateless and Stateful.
 - `mapValue`: Transforms only the value from Key/Value pair. It's recommended for ordinary flows.
 - `map`: Transforms both Key and Value from the record.
 - `filter`: Applies a conditional filter.
-- `windowed`: Applies windowing to stream.
 - `toStream`: Converts current data to KStream.
 - `to`: Forwards the event to some topic.
 
