@@ -130,7 +130,7 @@ The stream operations are separated into two categories, Stateless and Stateful.
 - `mapValue`: Transforms only the value from Key/Value pair. It's recommended for ordinary flows.
 - `map`: Transforms both Key and Value from the record.
 - `filter`: Applies a conditional filter.
-- `windowed`: Applies sliding window to stream.
+- `windowed`: Applies windowing to stream.
 - `toStream`: Converts current data to KStream.
 - `to`: Forwards the event to some topic.
 
@@ -180,6 +180,29 @@ stream.groupBy(
         Grouped.with(Serdes.String(), Serdes.String())
 );
 ```
+
+---
+## Windowing
+
+> Section under construction...
+
+### Time Window
+
+![time-window.png](images/time-window.png)
+
+### Tumbling Window
+
+![tumbling-window.png](images/tumbling-window.png)
+
+### Session Window
+
+![session-window.png](images/session-window.png)
+
+### Sliding Window
+
+![sliding-window.png](images/sliding-window.png)
+
+
 
 ---
 ## Join
