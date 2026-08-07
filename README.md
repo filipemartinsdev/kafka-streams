@@ -25,7 +25,7 @@
 
 ## Serialization
 
-The entire Kafka Streams serialization are based on Serde concept. Serde means Serializer/Desserializer, thus, they are wrapper classes to abstract both Serializer and Deserializer classes from the same type to bytes.
+The entire Kafka Streams serialization are based on Serde concept. Serde means Serializer/Deserializer, thus, they are wrapper classes to abstract both Serializer and Deserializer classes from the same type to bytes.
 
 We can use differents built-in Serdes for basic types or create a custom Serde for specific classes. All built-in Serdes can be retrieved from `Serdes` class, e.g. `Serdes.String()`.
 
@@ -131,13 +131,13 @@ The stream operations are separated into two categories, Stateless and Stateful.
 - `map`: Transforms both Key and Value from the record.
 - `filter`: Applies a conditional filter.
 - `windowed`: Applies sliding window to stream.
-- `toStream`: Transforms from KTable to KStream.
+- `toStream`: Converts current data to KStream.
 - `to`: Forwards the event to some topic.
 
 ### Stateful
 
-- `count`: Calculate how many messages have already been forwarded.
-- `reduce`: Apply a reduce function to the entire stream.
+- `count`: Calculates how many messages have already been forwarded.
+- `reduce`: Applies a reduce function to the entire stream.
 - `aggregate`: It's like reduce, but can handle multiple types.
 
 The stateful operations just make sense if the events are grouped, for instance, by Key. Thus, we need to use `groubByKey` or a custom `groupBy` method to group the events before applying any stateful operations.
