@@ -123,7 +123,7 @@ table.to(
 ---
 ## Basic Stream Operations
 
-The stream operations are separated into two categories, Stateless and Stateful. The Stateless includes basic operations that doesn't need past record state or any stored data. On the other hand, Stateful operations need the past event state.
+The stream operations are separated into two categories, Stateless and Stateful. The Stateless includes basic operations that doesn't need past record state or any stored data. On the other hand, Stateful operations need the past event state. 
 
 ### Stateless
 
@@ -137,12 +137,12 @@ The stream operations are separated into two categories, Stateless and Stateful.
 ### Stateful
 
 - `count`: Calculates how many messages have already been forwarded.
-- `reduce`: Applies a reduce function to the entire stream.
-- `aggregate`: It's like reduce, but can handle multiple types.
+- `reduce`: Applies a reduce function to the entire stream, returning the same type.
+- `aggregate`: It's like reduce, but can handle different types for input and output. Thus, we need to specify an initializer and Serde for key/value output instead of only the reduce function.
 
 The stateful operations just make sense if the events are grouped, for instance, by Key. Thus, we need to use `groubByKey` or a custom `groupBy` method to group the events before applying any stateful operations.
 
-Example:
+Examples:
 
 ```java
 var builder = new StreamsBuilder();
@@ -160,8 +160,8 @@ stream.mapValue((value) -> value.toUpperCase()) // Transform text to uppercase
     .groupByKey()
     
     .aggregate(
-            () -> 0L, // Default accumulator value
-            (key, value, accumulator) -> accumulator + value.length(),
+            () -> 0L, // Initializer for default value
+            (key, value, accumulator) -> accumulator + value.length(), // The reduce function
             Materialized.with(Serdes.String(), Serdes.Integer())
     )
     
