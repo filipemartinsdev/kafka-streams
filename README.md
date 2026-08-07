@@ -188,15 +188,15 @@ stream.groupBy(
 ---
 ## Windowing
 
-Not everytime we want to read all the stream historic on stateful operations. For that cases, we can use windowing to read only a time window from the stream. There are four type of windows with different approaches, being full time-based or even based on data flow.
+We don't always want to read all the stream history on stateful operations. In those cases, we can use windowing to read only a time window from the stream. There are four types of windows with different approaches, being full time-based or even based on data flow.
 
 All windows have `size` (fixed or not) and a `grace period`. Grace period is the extra time to some late event enter its window by timestamp. For example, an event has been created at 12pm, but for some reason, like network connection, just arrived at 12:05pm, and the window closes at 12:01pm. Without a configured grace period that event would be lost.
 
-Every event is going to be forwarded downstream everytime the window is updated. If you want a unique output by window, consider using `supress()` after the aggregation, for example:
+Every event is going to be forwarded downstream everytime the window is updated. If you want a single output by window, consider using `suppress()` after the aggregation, for example:
 
 ```java
 yourStream.aggregate(...)
-    .supress(Suppressed.untilWindowCloses(Suppressed.BufferConfig.unbounded()))
+    .suppress(Suppressed.untilWindowCloses(Suppressed.BufferConfig.unbounded()))
 ```
 
 ### Hopping Window
