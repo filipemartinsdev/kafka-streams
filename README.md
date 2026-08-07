@@ -18,7 +18,7 @@
     3.1. [Stateless](#stateless) <br>
     3.2. [Stateful](#stateful) <br>
 4. [Windowing](#windowing) <br>
-    4.1. [Time Window](#time-window) <br>
+    4.1. [Hopping Window](#hopping-window) <br>
     4.2. [Tumbling Window](#tumbling-window) <br>
     4.3. [Session Window](#session-window) <br>
     4.4. [Sliding Window](#sliding-window) <br>
