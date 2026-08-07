@@ -374,7 +374,7 @@ A join is a Stream operation with immutable Keys that merges two streams/tables,
 | True           | True            | True   |
 
 
-- **Outer Join**: Both side always produce a new merge, joining the nullable side.
+- **Outer Join**: Both sides always produce a new merge, joining the nullable side.
 
 | Left has value | Right has value | Joined |
 |----------------|-----------------|--------|
@@ -383,7 +383,7 @@ A join is a Stream operation with immutable Keys that merges two streams/tables,
 | True           | False           | True   |
 | True           | True            | True   |
 
-- **Left Outer Join**: The left side always produce a new merge, joining the nullable right side.
+- **Left Outer Join**: The left side always produces a new merge, joining the nullable right side.
 
 | Left has value | Right has value | Joined |
 |----------------|-----------------|--------|
